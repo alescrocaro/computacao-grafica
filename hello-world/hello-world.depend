@@ -1,0 +1,4 @@
+# depslib dependency file v1.0
+1647474025 source:/home/alexandre/Documentos/opengl/hello-world/hello-world/main.c
+	<GL/glut.h>
+

@@ -1,0 +1,4 @@
+# depslib dependency file v1.0
+1647525054 source:/home/alexandre/Documentos/opengl/triangulo-colorido/triangulo-colorido/main.c
+	<GL/glut.h>
+

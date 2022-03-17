@@ -1,2 +1,2 @@
-# computacao-grafica
-atividades desenvolvidas na matéria de Computação Gráfica
+# Computação Gráfica
+Atividades desenvolvidas na matéria de Computação Gráfica
