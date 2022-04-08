@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1649431796 source:/home/alexandre/Documentos/computacao-grafica/Atividade1/Atividade1/main.c
+	<stdio.h>
+	<GL/freeglut.h>
+

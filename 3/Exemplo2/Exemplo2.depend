@@ -1,0 +1,13 @@
+# depslib dependency file v1.0
+1442438096 source:/home/aretha/Dropbox/UTFPR/Disciplinas/2015/2 semestre/BCC35F - Computação Gráfica/Slides/6 - Transformações Geométricas 2D/C/Exemplo2/main.c
+	<stdio.h>
+	<GL/freeglut.h>
+
+1442442236 source:/home/aretha/Dropbox/UTFPR/Disciplinas/2016/2 semestre/BCC35F - Computação Gráfica/Slides/6 - Transformações Geométricas 2D/Códigos Slides/Linux/Exemplo2/main.c
+	<stdio.h>
+	<GL/freeglut.h>
+
+1442442236 source:/home/alexandre/Documentos/computacao-grafica/3/Exemplo2/main.c
+	<stdio.h>
+	<GL/freeglut.h>
+
