@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include <stdbool.h>
-
 #include <GL/freeglut.h>
 
 
@@ -13,7 +11,7 @@ void manageKeyboard(unsigned char key, int x, int y);
 void manageSpecialKeyboard(int key, int x, int y);
 void moveSquare(int x, int y);
 void rotateSquare(int rotationAngle);
-void scaleSquare(int scale);
+void scaleSquare(float scale);
 
 
 // vars
@@ -22,9 +20,16 @@ char flagKey = 't';
 int squarePositionX = 0, squarePositionY = 0;
 int squareSide = 10;
 int squareRotationAngle = 0;
-int squareScale = 1;
+float squareScale = 1;
 
 // FUNÇÕES PRINCIPAIS DO OPENGL
+int init(void){
+    glClearColor(1.0, 1.0, 1.0, 0.0);     //define a cor de fundo
+
+    glMatrixMode(GL_PROJECTION);          //carrega a matriz de projeção
+    gluOrtho2D(0,100,0,100);      //define projeção ortogonal 2D que mapeia  objetos da coordenada do mundo para coordenadas da tela
+}
+
 int main(int argc, char** argv) {
     glutInit(&argc,argv);                                     //inicializa o GLUT
     glutInitDisplayMode(GLUT_SINGLE| GLUT_RGB);               //configura o modo de display
@@ -41,12 +46,6 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-int init(void){
-    glClearColor(1.0, 1.0, 1.0, 0.0);     //define a cor de fundo
-
-    glMatrixMode(GL_PROJECTION);          //carrega a matriz de projeção
-    gluOrtho2D(0,100,0,100);      //define projeção ortogonal 2D que mapeia  objetos da coordenada do mundo para coordenadas da tela
-}
 
 void display(void){
     glClear(GL_COLOR_BUFFER_BIT);
@@ -118,53 +117,56 @@ void manageSpecialKeyboard(int key, int x, int y){
         case GLUT_KEY_UP:   // Teclou seta pra cima
             if(flagKey == 't'){
                 printf("fazendo translação pra cima\n");
-                moveSquare(0, 1);
+                moveSquare(0, 2);
             }
-            if(flagKey == 's'){
+            else if(flagKey == 's'){
                 printf("Aumentando tamanho do objeto\n");
-                squareScale += 0.1;
+                squareScale += 0.15;
             }
+            glutPostRedisplay();
 
             break;
 
         case GLUT_KEY_DOWN:   // Teclou seta pra baixo
             if(flagKey == 't'){
                 printf("fazendo translação pra baixo\n");
-                moveSquare(0, -1);
+                moveSquare(0, -2);
             }
-            if(flagKey == 's'){
+            else if(flagKey == 's'){
                 printf("diminuindo tamanho do objeto\n");
-                squareScale -= 0.1;
+                squareScale -= 0.15;
             }
+            glutPostRedisplay();
 
             break;
 
         case GLUT_KEY_LEFT:   // Teclou seta pra esquerda
             if(flagKey == 't'){
                 printf("fazendo translação pra esquerda\n");
-                moveSquare(-1, 0);
+                moveSquare(-2, 0);
 
             }
-            if(flagKey == 'r'){
+            else if(flagKey == 'r'){
                 printf("fazendo rotação pra esquerda\n");
-                squareRotationAngle += 5;
+                squareRotationAngle += 10;
             }
+
             break;
 
         case GLUT_KEY_RIGHT:    // Teclou seta pra direita
             if(flagKey == 't'){
                 printf("fazendo translação pra direita\n");
-                moveSquare(1, 0);
+                moveSquare(2, 0);
             }
-            if(flagKey == 'r'){
+            else if(flagKey == 'r'){
                 printf("fazendo rotação pra esquerda\n");
-                squareRotationAngle -= 5;
+                squareRotationAngle -= 10;
             }
 
             break;
 
         default:
-          break;
+            break;
     }
 
     glutPostRedisplay();
@@ -187,7 +189,7 @@ void rotateSquare(int rotationAngle){
 
 // Leva o quadrado para a origem (0,0) (não visivel para o usuário do programa),
 // aumenta/diminui seu tamanho e o devolve para a posição anterior
-void scaleSquare(int scale){
+void scaleSquare(float scale){
     glTranslatef((squareSide / 2), (squareSide / 2), 0);
     glScalef(scale, scale, 1);
     glTranslatef((-squareSide / 2), (-squareSide / 2), 0);
