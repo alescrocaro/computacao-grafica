@@ -12,13 +12,17 @@ void drawSquare();
 void manageKeyboard(unsigned char key, int x, int y);
 void manageSpecialKeyboard(int key, int x, int y);
 void moveSquare(int x, int y);
+void rotateSquare(int rotationAngle);
+void scaleSquare(int scale);
 
 
 // vars
 int window;
 char flagKey = 't';
-int squarePosX = 0, squarePosY = 0;
+int squarePositionX = 0, squarePositionY = 0;
 int squareSide = 10;
+int squareRotationAngle = 0;
+int squareScale = 1;
 
 // FUNÇÕES PRINCIPAIS DO OPENGL
 int main(int argc, char** argv) {
@@ -46,16 +50,19 @@ int init(void){
 
 void display(void){
     glClear(GL_COLOR_BUFFER_BIT);
-    glColor3f(1.0f,0.0f,0.0f);              // Desenha objetos com a cor vermelha
-    glMatrixMode(GL_MODELVIEW);           //carrega a matriz de modelo
-    glLoadIdentity();                     // carrega a matriz identidade
+    glColor3f(1.0f,0.0f,0.0f);    // Desenha objetos com a cor vermelha
+    glMatrixMode(GL_MODELVIEW);    //carrega a matriz de modelo
+    glLoadIdentity();    // carrega a matriz identidade
 
-    glTranslatef(squarePosX, squarePosY, 0);
+    // printf("%d, %d\n",squarePositionX,squarePositionY);
+    // funções para transladar, rotacionar e fazer escala do quadrado
+    glTranslatef(squarePositionX, squarePositionY, 0);
+    rotateSquare(squareRotationAngle);
+    scaleSquare(squareScale);
 
     drawSquare();
 
     glFlush();                            //desenha os comandos não executados
-
 }
 
 
@@ -113,6 +120,10 @@ void manageSpecialKeyboard(int key, int x, int y){
                 printf("fazendo translação pra cima\n");
                 moveSquare(0, 1);
             }
+            if(flagKey == 's'){
+                printf("Aumentando tamanho do objeto\n");
+                squareScale += 0.1;
+            }
 
             break;
 
@@ -120,7 +131,10 @@ void manageSpecialKeyboard(int key, int x, int y){
             if(flagKey == 't'){
                 printf("fazendo translação pra baixo\n");
                 moveSquare(0, -1);
-
+            }
+            if(flagKey == 's'){
+                printf("diminuindo tamanho do objeto\n");
+                squareScale -= 0.1;
             }
 
             break;
@@ -131,12 +145,20 @@ void manageSpecialKeyboard(int key, int x, int y){
                 moveSquare(-1, 0);
 
             }
+            if(flagKey == 'r'){
+                printf("fazendo rotação pra esquerda\n");
+                squareRotationAngle += 5;
+            }
             break;
 
         case GLUT_KEY_RIGHT:    // Teclou seta pra direita
             if(flagKey == 't'){
                 printf("fazendo translação pra direita\n");
                 moveSquare(1, 0);
+            }
+            if(flagKey == 'r'){
+                printf("fazendo rotação pra esquerda\n");
+                squareRotationAngle -= 5;
             }
 
             break;
@@ -148,9 +170,27 @@ void manageSpecialKeyboard(int key, int x, int y){
     glutPostRedisplay();
 }
 
+// Move o quadrado para direita, esquerda, cima ou baixo
+// modificando a var global squarePosition X e Y
 void moveSquare(int x, int y){
-    squarePosX += x;
-    squarePosY += y;
+    squarePositionX += x;
+    squarePositionY += y;
+}
+
+// Leva o quadrado para a origem (0,0) (não visivel para o usuário do
+// programa), rotaciona e o devolve para a posição anterior
+void rotateSquare(int rotationAngle){
+    glTranslatef((squareSide / 2), (squareSide / 2), 0);
+    glRotatef(rotationAngle, 0, 0, 1);
+    glTranslatef((-squareSide / 2), (-squareSide / 2), 0);
+}
+
+// Leva o quadrado para a origem (0,0) (não visivel para o usuário do programa),
+// aumenta/diminui seu tamanho e o devolve para a posição anterior
+void scaleSquare(int scale){
+    glTranslatef((squareSide / 2), (squareSide / 2), 0);
+    glScalef(scale, scale, 1);
+    glTranslatef((-squareSide / 2), (-squareSide / 2), 0);
 }
 
 
