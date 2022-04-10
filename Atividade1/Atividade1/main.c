@@ -78,7 +78,7 @@ void drawSquare(){
     glEnd();
 }
 
-// gerencia as teclas não especiais do teclado (apenas r, s, t)
+// gerencia as teclas não especiais do teclado (apenas r, s, t) e ESC para fechar a janela opengl)
 void manageKeyboard(unsigned char key, int x, int y){
     switch(key){
         case 'R':   // rotação: ← e → alteram o ângulo de rotação
@@ -99,9 +99,9 @@ void manageKeyboard(unsigned char key, int x, int y){
             printf("teclou %c\n", flagKey);
             break;
 
-        case 27:    // When Escape Is Pressed, shut down our window
+        case 27:    // Fecha a janela do  opengl ao pressionar ESC
             glutDestroyWindow(window);
-            exit(0);    // exit the program...normal termination.
+            exit(0);
             break;
 
          default:
@@ -111,7 +111,7 @@ void manageKeyboard(unsigned char key, int x, int y){
     glutPostRedisplay();
 }
 
-// gerencia as teclas especiais do teclado (apenas flechas pra todas direções e ESC para fechar a janela opengl)
+// gerencia as teclas especiais do teclado (apenas flechas pra todas direções
 void manageSpecialKeyboard(int key, int x, int y){
     switch(key){
         case GLUT_KEY_UP:   // Teclou seta pra cima
