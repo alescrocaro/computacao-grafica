@@ -3,20 +3,29 @@
 
 #include <GL/freeglut.h>
 
+
+// functions
 int init(void);
 void display(void);
 int main(int argc, char** argv);
-void drawSquare(void);
+void drawSquare();
 void manageKeyboard(unsigned char key, int x, int y);
-void manageSpecialKeyboard(unsigned char key, int x, int y);
-int window;
-bool flagR=false, flagT=false, flagS=false;
+void manageSpecialKeyboard(int key, int x, int y);
+void moveSquare(int x, int y);
 
+
+// vars
+int window;
+char flagKey = 't';
+int squarePosX = 0, squarePosY = 0;
+int squareSide = 10;
+
+// FUNÇÕES PRINCIPAIS DO OPENGL
 int main(int argc, char** argv) {
     glutInit(&argc,argv);                                     //inicializa o GLUT
     glutInitDisplayMode(GLUT_SINGLE| GLUT_RGB);               //configura o modo de display
+    glutInitWindowSize(500,500);                              //configura a largura e altura da janela de exibição
     glutInitWindowPosition(400,300);
-    glutInitWindowSize(0,100);                              //configura a largura e altura da janela de exibição
     window = glutCreateWindow("Atividade 1");           //cria a janela de exibição
 
     init();                          //executa função de inicialização
@@ -24,6 +33,7 @@ int main(int argc, char** argv) {
     glutKeyboardFunc(manageKeyboard);
     glutSpecialFunc(manageSpecialKeyboard);
     glutMainLoop();                  //mostre tudo e espere
+
     return 0;
 }
 
@@ -31,17 +41,7 @@ int init(void){
     glClearColor(1.0, 1.0, 1.0, 0.0);     //define a cor de fundo
 
     glMatrixMode(GL_PROJECTION);          //carrega a matriz de projeção
-    gluOrtho2D(0,500,0,500);      //define projeção ortogonal 2D que mapeia  objetos da coordenada do mundo para coordenadas da tela
-}
-
-
-void drawSquare(void){
-     glBegin(GL_POLYGON);                    //desenha o quadrado
-         glVertex2f(0,0);
-         glVertex2f(10,0);
-         glVertex2f(10,10);
-         glVertex2f(0,10);
-    glEnd();
+    gluOrtho2D(0,100,0,100);      //define projeção ortogonal 2D que mapeia  objetos da coordenada do mundo para coordenadas da tela
 }
 
 void display(void){
@@ -50,85 +50,107 @@ void display(void){
     glMatrixMode(GL_MODELVIEW);           //carrega a matriz de modelo
     glLoadIdentity();                     // carrega a matriz identidade
 
-    //utilizando o primeiro vértice da lista como ponto fixo
-    //glTranslatef(110, 50, 0);             //move o ponto fixo para a posição original
-    //glScalef(2.0,2.0,1.0);                //faz a escala
-    //glTranslatef(-110, -50, 0);           //move o ponto fixo para a origem
+    glTranslatef(squarePosX, squarePosY, 0);
 
     drawSquare();
 
     glFlush();                            //desenha os comandos não executados
 
 }
-/*
-void manageTranslation(int key, int x, int y){
-    if(key == GLUT_KEY_LEFT){
-           win -= 20;
-           glMatrixMode(GL_PROJECTION);
-           glLoadIdentity();
-           gluOrtho2D (-win, win, -win, win);
-    }
-    glutPostRedisplay();
-}*/
+
+
+// FUNÇÕES DA ATIVIDADE
+
+void drawSquare(){
+    glClearColor(1.0, 1.0, 1.0, 0.0);
+
+    glBegin(GL_POLYGON);                    //desenha o quadrado
+        glVertex2f(0, 0);
+        glVertex2f(squareSide, 0);
+        glVertex2f(squareSide, squareSide);
+        glVertex2f(0, squareSide);
+    glEnd();
+}
+
+// gerencia as teclas não especiais do teclado (apenas r, s, t)
 void manageKeyboard(unsigned char key, int x, int y){
     switch(key){
         case 'R':   // rotação: ← e → alteram o ângulo de rotação
         case 'r':
-            flagT = false;
-            flagR = !flagR;
-            flagS = false;
-            glColor3f(0.0f,1.0f,0.0f);
-            printf("teclou: %d\n", manageSpecialKeyboard);
+            flagKey = 'r';
+            printf("teclou %c\n", flagKey);
             break;
 
         case 'T':   // translação: ←, →, ↑ e ↓ alteram os fatores de translação tx e ty
         case 't':
-                flagT = !flagT;
-                flagR = false;
-                flagS = false;
+            flagKey = 't';
+            printf("teclou %c\n", flagKey);
             break;
+
         case 'S':   // escala uniforma: ↑ e ↓ alteram os fatores de escala
         case 's':
-            flagT = false;
-            flagR = false;
-            flagS = !flagS;
-            printf("teclou: %d\n", manageSpecialKeyboard);
+            flagKey = 's';
+            printf("teclou %c\n", flagKey);
             break;
 
-        case 27:    // When Escape Is Pressed...
-            // shut down our window
+        case 27:    // When Escape Is Pressed, shut down our window
             glutDestroyWindow(window);
-            // exit the program...normal termination.
-            exit(0);
-            break;          // Ready For Next Case
+            exit(0);    // exit the program...normal termination.
+            break;
 
-         default:                   // Now Wrap It Up
+         default:
                 break;
     }
+
     glutPostRedisplay();
 }
 
-void manageSpecialKeyboard(unsigned char key, int x, int y){
+// gerencia as teclas especiais do teclado (apenas flechas pra todas direções e ESC para fechar a janela opengl)
+void manageSpecialKeyboard(int key, int x, int y){
     switch(key){
-        case GLUT_KEY_UP:                   // Quando a seta para cima é teclada...
-            if(flagT == 1){
-                glutFullScreen ( );               // Vá para o modo tela cheia...
-                printf("teclou seta pra cima\n");
+        case GLUT_KEY_UP:   // Teclou seta pra cima
+            if(flagKey == 't'){
+                printf("fazendo translação pra cima\n");
+                moveSquare(0, 1);
             }
 
             break;
 
-        case GLUT_KEY_DOWN:                 // Quando a seta para baixo for teclada...
-            if(flagT == 1){
-                glutReshapeWindow ( 640, 480 );   // Vá para modo em janela de 640 por 480
-                printf("teclou seta pra baixo\n");
+        case GLUT_KEY_DOWN:   // Teclou seta pra baixo
+            if(flagKey == 't'){
+                printf("fazendo translação pra baixo\n");
+                moveSquare(0, -1);
+
+            }
+
+            break;
+
+        case GLUT_KEY_LEFT:   // Teclou seta pra esquerda
+            if(flagKey == 't'){
+                printf("fazendo translação pra esquerda\n");
+                moveSquare(-1, 0);
+
+            }
+            break;
+
+        case GLUT_KEY_RIGHT:    // Teclou seta pra direita
+            if(flagKey == 't'){
+                printf("fazendo translação pra direita\n");
+                moveSquare(1, 0);
             }
 
             break;
 
         default:
-          printf("teclou: %d\n", manageSpecialKeyboard);  // ...para ajudar você a debugar...
           break;
     }
+
     glutPostRedisplay();
 }
+
+void moveSquare(int x, int y){
+    squarePosX += x;
+    squarePosY += y;
+}
+
+
