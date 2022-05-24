@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
 
   glutDisplayFunc(display);
 
-  //glutTimerFunc(2,Timer, 1);
+  glutTimerFunc(2,Timer, 1);
 
   glutReshapeFunc(reshape);
 
@@ -34,7 +34,7 @@ void reshape(int w, int h) {
 
 // função de callback de glutTimerFunc
 void Timer(int value){
-  spin += 33.0f;
+  spin += 10.0f;
   glutPostRedisplay();
   glutTimerFunc(33, Timer, 1);
 }
@@ -45,82 +45,85 @@ void display(void) {
   glClearColor(1.0f, 1.0f, 1.0f, 1.0f);       // define a cor de fundo
   glClear(GL_COLOR_BUFFER_BIT);
 
-
   // -=-=-=-=-=- Viewport canto superior esquerdo -=-=-=-=-=-
   glViewport(0, height/2, width/2, height/2);
+
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-
   glOrtho(-3, 3, -3, 3, 1, 50);               // define uma projecao ortogonal
-  gluLookAt(0, 3, 0,
+
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  gluLookAt(0, 5, 0,
             0, 0, 0,
-            0,  0,-3);
+            0,  0,-1);
 
   glColor3f(1.0f, 0.0f, 0.0f);
 
   glutWireTeapot(2);                          // render a wireframe teapot
 
-  glPopMatrix();                              // restaura a matriz anterior
-
 
 
   // -=-=-=-=-=- Viewport canto superior direito -=-=-=-=-=-
   glViewport(width/2, height/2, width/2, height/2);
+
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-
   glOrtho(-3, 3, -3, 3, 1, 50);
-  gluLookAt(-3, 0, 0,
+
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  gluLookAt(-5, 0, 0,
             0, 0, 0,
             0, 1, 0);
 
   glColor3f(1.0f, 0.0f, 0.0f);
 
   glutWireTeapot(2);
-
-  glPopMatrix();
 
 
 
   // -=-=-=-=-=- Viewport canto inferior esquerdo -=-=-=-=-=-
   glViewport(0, 0, width/2, height/2);
+
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-
   glOrtho(-3, 3, -3, 3, 1, 50);
-  gluLookAt(0, 0, 3,
+
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  gluLookAt(0, 0, 5,
             0, 0, 0,
             0, 1, 0);
 
   glColor3f(1.0f, 0.0f, 0.0f);
 
   glutWireTeapot(2);
-
-  glPopMatrix();
 
 
 
   // -=-=-=-=-=- Viewport canto inferior direito -=-=-=-=-=-
   glViewport(width/2, 0, width/2, height/2);
+
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-
   gluPerspective(70, 1, 1, 50);               // define uma projecao perspectiva
-  gluLookAt(-3, 0, 3.5,
+
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  gluLookAt(0, 0, 5,
             0, 0, 0,
             0, 1, 0);
 
-  glRotatef(45, 1, 0, 0);                     // rotaciona o objeto
+
   glRotatef(spin, 0, 0, 1);                 // rotaciona o objeto
+  glRotatef(45, 1, 0, 0);                     // rotaciona o objeto
 
   glColor3f(1.0f, 0.0f, 0.0f);
 
   glutWireTeapot(2);
 
-  glPopMatrix();
-
 
 
   glFlush();
 }
-
